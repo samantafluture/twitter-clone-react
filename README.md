@@ -1,4 +1,4 @@
-# Twitter-clone-react
+# Twitelum, a basic Twitter clone
 
 Twitter clone built with React.
 
