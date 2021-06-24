@@ -1,13 +1,14 @@
 import React, { Fragment, useState } from 'react';
-import Cabecalho from './components/Cabecalho'
-import NavMenu from './components/NavMenu'
-import Dashboard from './components/Dashboard'
-import Widget from './components/Widget'
-import TrendsArea from './components/TrendsArea'
-import Tweet from './components/Tweet'
-import FormTweet from './components/FormTweet'
+import { Helmet } from 'react-helmet-async';
+import Cabecalho from '../../components/Cabecalho'
+import NavMenu from '../../components/NavMenu'
+import Dashboard from '../../components/Dashboard'
+import Widget from '../../components/Widget'
+import TrendsArea from '../../components/TrendsArea'
+import Tweet from '../../components/Tweet'
+import FormTweet from '../../components/FormTweet'
 
-function App() {
+function HomePage() {
     const [listaTweets, setListaTweets] = useState([]);
 
     // parent disponibiliza componente para que o child me passe um dado
@@ -18,6 +19,9 @@ function App() {
 
     return (
       <Fragment>
+        <Helmet>
+            <title>Twitelum | {`${listaTweets.length}`} Tweets</title>
+        </Helmet>
         <Cabecalho>
             <NavMenu usuario="@omariosouto" />
         </Cabecalho>
@@ -51,4 +55,4 @@ function App() {
     );
 }
 
-export default App;
+export default HomePage;
