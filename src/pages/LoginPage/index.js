@@ -1,24 +1,29 @@
 import { useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { useHistory } from 'react-router-dom';
 import Cabecalho from '../../components/Cabecalho'
 import Widget from '../../components/Widget'
-import './loginPage.css'
+import './loginPage.css';
+import LoginService from '../../services/LoginService';
 
 function LoginPage() {
     const inputLogin = useRef();
     const inputSenha = useRef();
+    const history = useHistory();
 
-    const handleLoginSubmit = (e) => {
+    const handleLoginSubmit = async (e) => {
         e.preventDefault();
         let login = inputLogin.current.value.trim(); // o input está dentro da propriedade current; trim remove espaços
         let senha = inputSenha.current.value.trim();
 
-        if (!login || !senha) {
-            alert('Por favor, preencha os campos corretamente!');
-        } 
-        else {
-            alert('Login realizado com sucesso!');
+        try {
+            await LoginService.autenticar(login, senha);
+            // registra a mudança no navegador e redireciona para pág escolhida
+            history.push('/');
+        } catch (erro) {
+            alert(erro.message);
         }
+
     }
 
     return (

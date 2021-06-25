@@ -17,16 +17,20 @@ import "./assets/css/novoTweet.css";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import PrivateRoute from "./routes/PrivateRoute";
 import * as serviceWorker from "./serviceWorker";
 
 ReactDOM.render(
     <HelmetProvider>
         <BrowserRouter>
             <Switch>
-                <Route path="/" component={HomePage} exact />
+                {/* condição -> para retornar o componente, tem que estar logado */}
+                <PrivateRoute path="/" component={HomePage} exact /> 
+                
                 <Route path="/login" component={LoginPage} />
+                
+                {/* qualquer outro caminho que não esteja configura, dá NotFoundPage */}
                 <Route component={NotFoundPage} />  
-                {/* qualquer outro caminho que não esteja configura, cai no NotFoundPage */}
             </Switch>
         </BrowserRouter>
     </HelmetProvider>
