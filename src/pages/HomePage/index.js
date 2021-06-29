@@ -1,20 +1,31 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useContext, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import Cabecalho from '../../components/Cabecalho'
-import NavMenu from '../../components/NavMenu'
-import Dashboard from '../../components/Dashboard'
-import Widget from '../../components/Widget'
-import TrendsArea from '../../components/TrendsArea'
-import Tweet from '../../components/Tweet'
-import FormTweet from '../../components/FormTweet'
+import Cabecalho from '../../components/Cabecalho';
+import NavMenu from '../../components/NavMenu';
+import Dashboard from '../../components/Dashboard';
+import Widget from '../../components/Widget';
+import TrendsArea from '../../components/TrendsArea';
+import Tweet from '../../components/Tweet';
+import FormTweet from '../../components/FormTweet';
+import TweetService from '../../services/TweetService';
+import NotificacaoContext from '../../contexts/NotificacaoContext';
 
 function HomePage() {
     const [listaTweets, setListaTweets] = useState([]);
+    const setNotificacao = useContext(NotificacaoContext);
+    
+    useEffect(() => {
+        TweetService.getTweets().then(tweets => setListaTweets(tweets))
+    }, []);
 
-    // parent disponibiliza componente para que o child me passe um dado
-    const addTweet = (tweet) => {
-        listaTweets.unshift(tweet); // adiciona no início da lista
-        setListaTweets([ ...listaTweets]); // atualiza estado com infos novas da lista
+    const addTweet = async (textoTweet) => {
+        try {
+            const tweetAdicionado = await TweetService.addTweet(textoTweet);
+            console.log("Tweet retornado do servidor: ", tweetAdicionado);
+            setListaTweets( [tweetAdicionado, ...listaTweets] );
+        } catch (erro) {
+            setNotificacao(erro.message);
+        }
     }
 
     return (
@@ -38,11 +49,13 @@ function HomePage() {
                 <Widget>
                     <div className="tweetsArea">
                         {
-                            listaTweets.map((tweet, indice) => {
+                            listaTweets.map((tweet) => {
                                 return (
                                     <Tweet 
-                                        key={indice} 
-                                        texto={tweet}
+                                        key={tweet._id} 
+                                        id={tweet._id}
+                                        conteudo={tweet.conteudo}
+                                        usuario={tweet.usuario}
                                     />
                                 )
                             })

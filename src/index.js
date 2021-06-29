@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
+import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 
 // CSSs Globais
 import "./assets/css/reset.css";
@@ -19,23 +19,24 @@ import LoginPage from "./pages/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import PrivateRoute from "./routes/PrivateRoute";
 import * as serviceWorker from "./serviceWorker";
+import Notificacao from "./components/Notificacao";
 
 ReactDOM.render(
+  <Notificacao>
     <HelmetProvider>
-        <BrowserRouter>
-            <Switch>
-                {/* condição -> para retornar o componente, tem que estar logado */}
-                <PrivateRoute path="/" component={HomePage} exact /> 
-                
-                <Route path="/login" component={LoginPage} />
-                
-                {/* qualquer outro caminho que não esteja configura, dá NotFoundPage */}
-                <Route component={NotFoundPage} />  
-            </Switch>
-        </BrowserRouter>
+      <BrowserRouter>
+        <Switch>
+          {/* condição -> para retornar o componente, tem que estar logado */}
+          <PrivateRoute path="/" component={HomePage} exact />
+          <Route path="/login" component={LoginPage} />
+          {/* qualquer outro caminho que não esteja configura, dá NotFoundPage */}
+          <Route component={NotFoundPage} />
+        </Switch>
+      </BrowserRouter>
     </HelmetProvider>
-, 
-document.getElementById("root"));
+  </Notificacao>,
+  document.getElementById("root")
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
