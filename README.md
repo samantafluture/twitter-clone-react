@@ -9,3 +9,6 @@ Twitter clone built with React.
 - NPM
 - React Router
 - React Helmet Async
+- Context API
+- Server-side API Connection
+- Redux

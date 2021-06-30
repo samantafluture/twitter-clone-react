@@ -84,7 +84,7 @@ function LoginPage() {
               <div className="loginPage__inputWrap">
                 <button
                   disabled={!isFormValid}
-                  className="loginPage__btnLogin"
+                  className={"loginPage__btnLogin"}
                   type="submit"
                 >
                   Logar
