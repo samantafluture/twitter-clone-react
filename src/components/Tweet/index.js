@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import PropTypes from "prop-types";
 import "./tweet.css";
 import TweetService from "../../services/TweetService";
 import NotificacaoContext from "../../contexts/NotificacaoContext";
@@ -68,6 +69,19 @@ function Tweet({
       </footer>
     </article>
   );
+}
+
+Tweet.propTypes = {
+  id: PropTypes.string.isRequired,
+  conteudo: PropTypes.string.isRequired,
+  removivel: PropTypes.bool,
+  totalLikes: PropTypes.number.isRequired,
+  likeado: PropTypes.bool.isRequired,
+  usuario: PropTypes.shape({
+    foto: PropTypes.string.isRequired,
+    login: PropTypes.string.isRequired,
+    nome: PropTypes.string.isRequired,
+  }).isRequired
 }
 
 export default Tweet;

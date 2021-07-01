@@ -1,7 +1,7 @@
-import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
+import { Provider } from "react-redux";
 
 // CSSs Globais
 import "./assets/css/reset.css";
@@ -20,21 +20,24 @@ import NotFoundPage from "./pages/NotFoundPage";
 import PrivateRoute from "./routes/PrivateRoute";
 import * as serviceWorker from "./serviceWorker";
 import Notificacao from "./components/Notificacao";
+import store from "./store";
 
 ReactDOM.render(
-  <Notificacao>
-    <HelmetProvider>
-      <BrowserRouter>
-        <Switch>
-          {/* condição -> para retornar o componente, tem que estar logado */}
-          <PrivateRoute path="/" component={HomePage} exact />
-          <Route path="/login" component={LoginPage} />
-          {/* qualquer outro caminho que não esteja configura, dá NotFoundPage */}
-          <Route component={NotFoundPage} />
-        </Switch>
-      </BrowserRouter>
-    </HelmetProvider>
-  </Notificacao>,
+  <Provider store={store}>
+    <Notificacao>
+      <HelmetProvider>
+        <BrowserRouter>
+          <Switch>
+            {/* condição -> para retornar o componente, tem que estar logado */}
+            <PrivateRoute path="/" component={HomePage} exact />
+            <Route path="/login" component={LoginPage} />
+            {/* qualquer outro caminho que não esteja configura, dá NotFoundPage */}
+            <Route component={NotFoundPage} />
+          </Switch>
+        </BrowserRouter>
+      </HelmetProvider>
+    </Notificacao>
+  </Provider>,
   document.getElementById("root")
 );
 
