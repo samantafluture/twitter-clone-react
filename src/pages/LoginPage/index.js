@@ -1,18 +1,21 @@
-import { useContext, useRef } from "react";
+import { useContext, useRef, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { useHistory } from "react-router-dom";
 import Cabecalho from "../../components/Cabecalho";
 import Widget from "../../components/Widget";
 import "./loginPage.css";
-import LoginService from "../../services/LoginService";
 import NotificacaoContext from "../../contexts/NotificacaoContext";
 import useValidations from "../../hooks/useValidations";
 import useFormValidator from "../../hooks/useFormValidator";
+import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { AuthThunkActions } from "../../store/ducks/auth";
 
 function LoginPage() {
   const inputLogin = useRef();
   const inputSenha = useRef();
   const history = useHistory();
+  const authState = useSelector( state => state.auth );
+  const dispatch = useDispatch();
   const setNotificacao = useContext(NotificacaoContext);
   const { isEmpty } = useValidations();
   const { erros, isFormValid, validate } = useFormValidator({
@@ -20,18 +23,22 @@ function LoginPage() {
     senha: isEmpty("Senha é obrigatória!"),
   });
 
+  useEffect(() => {
+    if (authState.error) {
+      setNotificacao(authState.error);
+    } else if (authState.status === 'LOGGED_IN'){
+      setNotificacao('Login realizado com sucesso');
+      history.push('/');
+    }
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authState.error]);
+
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     let login = inputLogin.current.value.trim(); // o input está dentro da propriedade current; trim remove espaços
     let senha = inputSenha.current.value.trim();
-
-    try {
-      await LoginService.autenticar(login, senha);
-      setNotificacao("Login realizado com sucesso!");
-      history.push("/"); // registra a mudança no navegador e redireciona para pág escolhida
-    } catch (erro) {
-      setNotificacao(erro.message);
-    }
+    dispatch(AuthThunkActions.login(login, senha));
   };
 
   return (

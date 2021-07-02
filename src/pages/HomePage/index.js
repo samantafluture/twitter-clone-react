@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { Fragment, useContext, useEffect } from "react";
+import React, { Fragment, useContext, useEffect, useCallback } from "react";
 import { Helmet } from "react-helmet-async";
 import Cabecalho from "../../components/Cabecalho";
 import NavMenu from "../../components/NavMenu";
@@ -8,7 +8,6 @@ import Widget from "../../components/Widget";
 import TrendsArea from "../../components/TrendsArea";
 import Tweet from "../../components/Tweet";
 import FormTweet from "../../components/FormTweet";
-import TweetService from "../../services/TweetService";
 import NotificacaoContext from "../../contexts/NotificacaoContext";
 import { useSelector, useDispatch } from "react-redux";
 import { TweetsThunkActions } from "../../store/ducks/tweets";
@@ -19,14 +18,21 @@ function HomePage() {
   const setNotificacao = useContext(NotificacaoContext);
 
   useEffect(() => {
-    setNotificacao(error);
+    if (error) {
+      setNotificacao(error);
+    }
     if (!error) {
-        dispatch(TweetsThunkActions.loadTweets());
+      dispatch(TweetsThunkActions.loadTweets());
     }
   }, [error]);
 
-  const addTweet = (textoTweet) => dispatch(TweetsThunkActions.addTweet(textoTweet));
-  const removeTweet = (id) => dispatch(TweetsThunkActions.deleteTweet(id));
+  const addTweet = useCallback(
+    (textoTweet) => dispatch(TweetsThunkActions.addTweet(textoTweet)),
+  []);
+
+  const removeTweet = useCallback(
+    (id) => dispatch(TweetsThunkActions.deleteTweet(id)),
+  []);
 
   return (
     <Fragment>

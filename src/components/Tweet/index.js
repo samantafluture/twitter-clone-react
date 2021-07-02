@@ -1,34 +1,24 @@
-import { useContext, useState } from "react";
 import PropTypes from "prop-types";
 import "./tweet.css";
-import TweetService from "../../services/TweetService";
-import NotificacaoContext from "../../contexts/NotificacaoContext";
+import { useDispatch } from 'react-redux';
+import { TweetsThunkActions } from "../../store/ducks/tweets";
+import { memo } from 'react';
 
-function Tweet({
-  conteudo,
-  usuario,
-  id,
-  totalLikes,
-  likeado,
-  removivel,
-  removeTweetCallback,
-}) {
-  const [likeStatus, setLikeStatus] = useState(likeado);
-  const [totalCurtidas, setTotalCurtidas] = useState(totalLikes);
-  const setNotificacao = useContext(NotificacaoContext);
-  const likeadoClass = likeStatus && "iconHeart--active";
+const Tweet = memo(
+  function Tweet({
+    conteudo,
+    usuario,
+    id,
+    totalLikes,
+    likeado,
+    removivel,
+    removeTweetCallback,
+  }){
 
-  const handleLike = async () => {
-    try {
-      const curtido = !likeStatus;
-      const curtidas = curtido ? totalCurtidas + 1 : totalCurtidas - 1;
-      setLikeStatus(curtido);
-      setTotalCurtidas(curtidas);
-      await TweetService.likeTweet(id);
-    } catch (erro) {
-      setNotificacao(erro.message);
-    }
-  };
+  const dispatch = useDispatch();
+  const likeadoClass = likeado && "iconHeart--active";
+
+  const handleLike = () => dispatch(TweetsThunkActions.likeTweet(id));
 
   return (
     <article className="tweet">
@@ -64,12 +54,12 @@ function Tweet({
               <path d="M36.885 25.166c0 5.45-4.418 9.868-9.867 9.868-3.308 0-6.227-1.632-8.018-4.128-1.79 2.496-4.71 4.129-8.017 4.129-5.45 0-9.868-4.418-9.868-9.868 0-.773.098-1.52.266-2.242C2.75 14.413 12.216 5.431 19 2.965c6.783 2.466 16.249 11.448 17.617 19.96.17.721.268 1.47.268 2.241"></path>
             </g>
           </svg>
-          {totalCurtidas}
+          {totalLikes}
         </button>
       </footer>
     </article>
   );
-}
+});
 
 Tweet.propTypes = {
   id: PropTypes.string.isRequired,

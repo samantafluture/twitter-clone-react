@@ -5,6 +5,7 @@ const ActionTypes = {
   LOAD_TWEETS: "tweets/LOAD",
   ADD_TWEET: "tweets/ADD",
   REMOVE_TWEET: "tweets/REMOVE",
+  LIKE_TWEET: "tweets/LIKE",
   ERROR_TWEET: "tweets/ERROR",
 };
 
@@ -31,6 +32,19 @@ export function tweetsReducer(state = initialState, action = {}) {
       return {
         data: state.data.filter((tweet) => tweet._id !== action.payload.id),
         error: "",
+      };
+    case ActionTypes.LIKE_TWEET:
+      return {
+        ...state,
+        error: "",
+        data: state.data.map((tweet) => {
+          if (tweet._id === action.payload.id) {
+            let likes = tweet.totalLikes;
+            tweet.likeado = !tweet.likeado;
+            tweet.totalLikes = tweet.likeado ? likes + 1 : likes - 1;
+          }
+          return tweet;
+        }),
       };
     case ActionTypes.ERROR_TWEET:
       return {
@@ -70,6 +84,20 @@ export const TweetsThunkActions = {
       try {
         await TweetService.deleteTweet(id);
         dispatch({ type: ActionTypes.REMOVE_TWEET, payload: { id } });
+      } catch (error) {
+        dispatch({
+          type: ActionTypes.ERROR_TWEET,
+          payload: { error: error.message },
+        });
+      }
+    };
+  },
+
+  likeTweet(id) {
+    return async function (dispatch) {
+      try {
+        dispatch({ type: ActionTypes.LIKE_TWEET, payload: { id } });
+        await TweetService.likeTweet(id);
       } catch (error) {
         dispatch({
           type: ActionTypes.ERROR_TWEET,
